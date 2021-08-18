@@ -1,11 +1,41 @@
-const express = require('express')
-const app = express()
-const port = 3000
+var express = require('express');
+var data = require('./data/test.json');
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+var app = express();
+const PORT = 3000;
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
+app.set('view engine','ejs');//sent views to EJS
+
+//route for index page
+app.get('/', (req,res)=>{
+  var title = "Our Home Page";
+  res.render('pages/index',{title:title});
+});
+
+//route fo users (list) page
+app.get('/users', function(req, res) {
+	var title = 'Users Page';
+	res.render('users/index', {
+    	title: title,
+    	users: data
+	});
+});
+
+
+app.listen(PORT,()=>{
+  console.log(`App is running on port ${PORT}`);
+  console.log(data);
+});
+
+//add user/view route - we are cheating by using the array index + 1
+app.get('/users/view/:id', function(req, res) {
+  var title = 'User Page';
+  var id = req.params.id;
+  res.render('users/view', {
+      title: title,
+      user: data[--id]
+  });
+ });
+ 
+
+
